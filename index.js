@@ -15,7 +15,7 @@ app.use(bodyParser.json())
 
 // Index route
 app.get('/', function (req, res) {
-    res.send('Bonjour, Je suis votre Facebook Messenger Bot')
+    res.send('Bienvenue sur Willof God on the beat')
 })
 
 app.get('/webhook/', function (req, res) {
@@ -54,7 +54,7 @@ app.post('/webhook/', function (req, res) {
     res.sendStatus(200)
 })
 
-var token = "EAAIg3tRWQgQBACCqQQ0lvjJZC8MCbTRXnSLefFZBesqTuNfUmDmojlypyEXZCKisFMZBkmGDUtvIlNnPBOEpgrOb6pd7IwuZCUDFHbBZAHDxBgxJLVP8wtW8ifjPxDhDPvZCj0HwCgjCFhTxOuRvPf2s4b0FM6QyZAuQO8Qw0pbGFUGBK8xJYSi9z1vriaT8x2kZD"
+var token = "EAAIg3tRWQgQBAGE0Ir7b0Tvx1ox3O15y93cbMakOZCEJkNHu8DzmruCD6fDH53cAhMG8uG03ZCiKuzTYQGW0eLK2mzwwcKuxkCFlIJwCPFKsvnZBwE34FEVlhFcXldfZCdkCu0XQ60fRehgilTic58yZB70wjGKCgrfKZBoPaJZAA7AJFueZAsDzaZCsTtvnUR3kZD"
 
 // Echo back messages
 
