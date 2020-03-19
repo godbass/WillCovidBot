@@ -4,6 +4,7 @@ var express = require('express')
 var bodyParser = require('body-parser')
 var request = require('request')
 var app = express()
+var verify_token = "Bot_Messenger_App"
 
 app.set('port', (process.env.PORT || 5000))
 
@@ -19,7 +20,8 @@ app.get('/', function (req, res) {
 })
 
 app.get('/webhook/', function (req, res) {
-    if (req.query['hub.verify_token'] === 'Bot_Messenger_App') {
+    if (req.query['hub.verify_token'] === verify_token) {
+        console.log("Chatbot WGB en cours d'utilisation")
         res.send(req.query['hub.challenge'])
     }
     res.send('Error, wrong token')
