@@ -4,7 +4,6 @@ var express = require('express')
 var bodyParser = require('body-parser')
 var request = require('request')
 var app = express()
-var verify_token = "Bot_Messenger_App"
 
 app.set('port', (process.env.PORT || 5000))
 
@@ -33,6 +32,8 @@ app.listen(app.get('port'), function() {
 
 
 // End Point
+
+var verify_token = process.env.verify_token;
 
 app.post('/webhook/', function (req, res) {
     messaging_events = req.body.entry[0].messaging
