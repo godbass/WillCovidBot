@@ -54,6 +54,8 @@ app.post('/webhook/', function (req, res) {
     res.sendStatus(200)
 })
 
+var token = process.env.token;
+
 // Echo back messages
 
 function sendTextMessage(sender, text) {
