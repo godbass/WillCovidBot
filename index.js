@@ -54,8 +54,6 @@ app.post('/webhook/', function (req, res) {
     res.sendStatus(200)
 })
 
-var token = ""
-
 // Echo back messages
 
 function sendTextMessage(sender, text) {
