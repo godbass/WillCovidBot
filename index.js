@@ -16,7 +16,7 @@ restService.use(bodyParser.json());
 
 
 
-
+restService.set('port', (process.env.PORT || 5000))
 // Index route
 restService.get('/', function (req, res) {
     res.send('Bienvenue sur WillCovidBot')
