@@ -15,7 +15,7 @@ app.use(bodyParser.json())
 
 // Index route
 app.get('/', function (req, res) {
-    res.send('Bienvenue sur Willof God on the beat')
+    res.send('On va essayer autrement')
 })
 
 app.get('/webhook/', function (req, res) {
