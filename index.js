@@ -1,165 +1,219 @@
-// El Mehdi LAIDOUNI
+"use strict";
 
-var express = require('express')
-var bodyParser = require('body-parser')
-var request = require('request')
-var app = express()
+const express = require("express");
+const bodyParser = require("body-parser");
 
-app.set('port', (process.env.PORT || 5000))
+const restService = express();
 
-// Process urlencoded
-app.use(bodyParser.urlencoded({extended: false}))
+restService.use(
+    bodyParser.urlencoded({
+        extended: true
+    })
+);
 
-// Process json
-app.use(bodyParser.json())
+restService.use(bodyParser.json());
 
-// Index route
-app.get('/', function (req, res) {
-    res.send('On va essayer autrement')
-})
+restService.post("/echo", function (req, res) {
+    var speech =
+        req.body.queryResult &&
+            req.body.queryResult.parameters &&
+            req.body.queryResult.parameters.echoText
+            ? req.body.queryResult.parameters.echoText
+            : "Seems like some problem. Speak again.";
 
-app.get('/webhook/', function (req, res) {
-    if (req.query['hub.verify_token'] === verify_token) {
-        console.log("Chatbot WGB en cours d'utilisation")
-        res.send(req.query['hub.challenge'])
-    }
-    res.send('Error, wrong token')
-})
-
-app.listen(app.get('port'), function() {
-    console.log('running on port', app.get('port'))
-})
-
-
-// End Point
-
-var verify_token = process.env.verify_token;
-
-app.post('/webhook/', function (req, res) {
-    messaging_events = req.body.entry[0].messaging
-    for (i = 0; i < messaging_events.length; i++) {
-        event = req.body.entry[0].messaging[i]
-        sender = event.sender.id
-        if (event.message && event.message.text) {
-            text = event.message.text
-            if (text === 'salut') {
-                sendGenericMessage(sender)
-                continue
+    var speechResponse = {
+        google: {
+            expectUserResponse: true,
+            richResponse: {
+                items: [
+                    {
+                        simpleResponse: {
+                            textToSpeech: speech
+                        }
+                    }
+                ]
             }
-            sendTextMessage(sender, "Bot: " + text.substring(0, 200))
         }
-        if (event.postback) {
-            text = JSON.stringify(event.postback)
-            sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
-            continue
-        }
+    };
+
+    return res.json({
+        payload: speechResponse,
+        //data: speechResponse,
+        fulfillmentText: speech,
+        speech: speech,
+        displayText: speech,
+        source: "webhook-echo-sample"
+    });
+});
+
+restService.post("/audio", function (req, res) {
+    var speech = "";
+    switch (req.body.result.parameters.AudioSample.toLowerCase()) {
+        //Speech Synthesis Markup Language 
+        case "music one":
+            speech =
+                '<speak><audio src="https://actions.google.com/sounds/v1/cartoon/slide_whistle.ogg">did not get your audio file</audio></speak>';
+            break;
+        case "music two":
+            speech =
+                '<speak><audio clipBegin="1s" clipEnd="3s" src="https://actions.google.com/sounds/v1/cartoon/slide_whistle.ogg">did not get your audio file</audio></speak>';
+            break;
+        case "music three":
+            speech =
+                '<speak><audio repeatCount="2" soundLevel="-15db" src="https://actions.google.com/sounds/v1/cartoon/slide_whistle.ogg">did not get your audio file</audio></speak>';
+            break;
+        case "music four":
+            speech =
+                '<speak><audio speed="200%" src="https://actions.google.com/sounds/v1/cartoon/slide_whistle.ogg">did not get your audio file</audio></speak>';
+            break;
+        case "music five":
+            speech =
+                '<audio src="https://actions.google.com/sounds/v1/cartoon/slide_whistle.ogg">did not get your audio file</audio>';
+            break;
+        case "delay":
+            speech =
+                '<speak>Let me take a break for 3 seconds. <break time="3s"/> I am back again.</speak>';
+            break;
+        //https://www.w3.org/TR/speech-synthesis/#S3.2.3
+        case "cardinal":
+            speech = '<speak><say-as interpret-as="cardinal">12345</say-as></speak>';
+            break;
+        case "ordinal":
+            speech =
+                '<speak>I stood <say-as interpret-as="ordinal">10</say-as> in the class exams.</speak>';
+            break;
+        case "characters":
+            speech =
+                '<speak>Hello is spelled as <say-as interpret-as="characters">Hello</say-as></speak>';
+            break;
+        case "fraction":
+            speech =
+                '<speak>Rather than saying 24+3/4, I should say <say-as interpret-as="fraction">24+3/4</say-as></speak>';
+            break;
+        case "bleep":
+            speech =
+                '<speak>I do not want to say <say-as interpret-as="bleep">F&%$#</say-as> word</speak>';
+            break;
+        case "unit":
+            speech =
+                '<speak>This road is <say-as interpret-as="unit">50 foot</say-as> wide</speak>';
+            break;
+        case "verbatim":
+            speech =
+                '<speak>You spell HELLO as <say-as interpret-as="verbatim">hello</say-as></speak>';
+            break;
+        case "date one":
+            speech =
+                '<speak>Today is <say-as interpret-as="date" format="yyyymmdd" detail="1">2017-12-16</say-as></speak>';
+            break;
+        case "date two":
+            speech =
+                '<speak>Today is <say-as interpret-as="date" format="dm" detail="1">16-12</say-as></speak>';
+            break;
+        case "date three":
+            speech =
+                '<speak>Today is <say-as interpret-as="date" format="dmy" detail="1">16-12-2017</say-as></speak>';
+            break;
+        case "time":
+            speech =
+                '<speak>It is <say-as interpret-as="time" format="hms12">2:30pm</say-as> now</speak>';
+            break;
+        case "telephone one":
+            speech =
+                '<speak><say-as interpret-as="telephone" format="91">09012345678</say-as> </speak>';
+            break;
+        case "telephone two":
+            speech =
+                '<speak><say-as interpret-as="telephone" format="1">(781) 771-7777</say-as> </speak>';
+            break;
+        // https://www.w3.org/TR/2005/NOTE-ssml-sayas-20050526/#S3.3
+        case "alternate":
+            speech =
+                '<speak>IPL stands for <sub alias="indian premier league">IPL</sub></speak>';
+            break;
     }
-    res.sendStatus(200)
-})
+    return res.json({
+        speech: speech,
+        displayText: speech,
+        source: "webhook-echo-sample"
+    });
+});
 
-var token = process.env.token;
+restService.post("/video", function (req, res) {
+    return res.json({
+        speech:
+            '<speak>  <audio src="https://www.youtube.com/watch?v=VX7SSnvpj-8">did not get your MP3 audio file</audio></speak>',
+        displayText:
+            '<speak>  <audio src="https://www.youtube.com/watch?v=VX7SSnvpj-8">did not get your MP3 audio file</audio></speak>',
+        source: "webhook-echo-sample"
+    });
+});
 
-// Echo back messages
+restService.post("/slack-test", function (req, res) {
+    var slack_message = {
+        text: "Details of JIRA board for Browse and Commerce",
+        attachments: [
+            {
+                title: "JIRA Board",
+                title_link: "http://www.google.com",
+                color: "#36a64f",
 
-function sendTextMessage(sender, text) {
-    messageData = {
-        text:text
-    }
-    request({
-        url: 'https://graph.facebook.com/v2.6/me/messages',
-        qs: {access_token:token},
-        method: 'POST',
-        json: {
-            recipient: {id:sender},
-            message: messageData,
+                fields: [
+                    {
+                        title: "Epic Count",
+                        value: "50",
+                        short: "false"
+                    },
+                    {
+                        title: "Story Count",
+                        value: "40",
+                        short: "false"
+                    }
+                ],
+
+                thumb_url:
+                    "https://stiltsoft.com/blog/wp-content/uploads/2016/01/5.jira_.png"
+            },
+            {
+                title: "Story status count",
+                title_link: "http://www.google.com",
+                color: "#f49e42",
+
+                fields: [
+                    {
+                        title: "Not started",
+                        value: "50",
+                        short: "false"
+                    },
+                    {
+                        title: "Development",
+                        value: "40",
+                        short: "false"
+                    },
+                    {
+                        title: "Development",
+                        value: "40",
+                        short: "false"
+                    },
+                    {
+                        title: "Development",
+                        value: "40",
+                        short: "false"
+                    }
+                ]
+            }
+        ]
+    };
+    return res.json({
+        speech: "speech",
+        displayText: "speech",
+        source: "webhook-echo-sample",
+        data: {
+            slack: slack_message
         }
-    }, function(error, response, body) {
-        if (error) {
-            console.log('Error sending messages: ', error)
-        } else if (response.body.error) {
-            console.log('Error: ', response.body.error)
-        }
-    })
-}
+    });
+});
 
-
-// Two cards.
-
-function sendGenericMessage(sender) {
-    messageData = {
-        "attachment": {
-            "type": "template",
-            "payload": {
-                "template_type": "generic",
-                "elements": [{
-                    "title": "Si vous souhaitez suivre",
-                    "subtitle": "social network",
-                    "image_url": "https://raw.githubusercontent.com/mlaidouni/FacebookBot/master/chatbot-facebook.jpg",
-                    "buttons": [{
-                        "type": "web_url",
-                        "url": "https://www.facebook.com/groups/1795624087378868/",
-                        "title": "FB Facebook Group"
-                    }, {
-                        "type": "web_url",
-                        "url": "https://www.youtube.com/channel/UCRV86HkxxSGI-whauOMkQdw",
-                        "title": "Me Suivre sur Youtube"
-                    },{
-                        "type": "web_url",
-                        "url": "https://twitter.com/elmehdimobi",
-                        "title": "Me Suivre sur Twitter"
-                    }],
-                }, {
-                    "title": "Choses à savoir créer un bot",
-                    "subtitle": "Quelques questions sur notre bot",
-                    "image_url": "https://raw.githubusercontent.com/mlaidouni/FacebookBot/master/facebook-chatbots.png",
-                    "buttons": [{
-                        "type": "postback",
-                        "title": "C’est quoi un bot Facebook?",
-                        "payload": "Un bot conversationnel, c’est un logiciel informatique qui réalise des conversations automatisées. Un bot Facebook, c’est la même chose, mais sur un certain réseau social",
-                    },{
-                        "type": "postback",
-                        "title": "Quelles sont les entreprises qui ont essayé les bots ?",
-                        "payload": "Il s’agit de CNN, qui vous envoie un briefing par message chaque matin, comme une newsletter, quoi. En France, il y a notamment Skyscanner, Voyages-Sncf et KLM.",
-                    }, {
-                        "type": "postback",
-                        "title": "Comment créer votre bot Facebook?",
-                        "payload": "Il existe deux façons pour créer un bot facebook, soit d'utiliser une plateforme sans codage ou le créer en codage",
-                    }],
-                },  {
-                    "title": "Les outils nécessaires",
-                    "subtitle": "pour créer Facebook Messenger Bot",
-                    "image_url": "https://raw.githubusercontent.com/mlaidouni/FacebookBot/master/Facebook%20Messanger%20Bot.png",
-                    "buttons": [{
-                        "type": "postback",
-                        "title": "C'est quoi Node.js",
-                        "payload": "Node.js est une plateforme de développement Javascript. Ce n'est ni un serveur ,ni un Framework, c'est juste le langage Javascript avec des bibliothèques permettant de réaliser des actions comme écrire sur la sortie standard, ouvrir/fermer des connections réseaux ou encore créer un fichier.",
-                    },{
-                        "type": "postback",
-                        "title": "C'est quoi Heroku",
-                        "payload": "Heroku est une plateforme « Cloud » qui permet d’héberger, de développer tout type d’application. La plateforme appartient à Salesforce, gage de sécurité, de confidentialité et de haute performance.",
-                    }, {
-                        "type": "postback",
-                        "title": "C'est quoi GitHub",
-                        "payload": "GitHub est un site où n’importe qui peut déposer son projet web. Qu'il s'agit de quelques lignes de code pour une page modeste, ou d’une grosse application, les amateurs et professionnels ouvrent des comptes sur GitHub pour soumettre leur travail à l’appréciation de tous.",
-                    }],
-                }]  
-            } 
-        }
-    }
-    request({
-        url: 'https://graph.facebook.com/v2.6/me/messages',
-        qs: {access_token:token},
-        method: 'POST',
-        json: {
-            recipient: {id:sender},
-            message: messageData,
-        }
-    }, function(error, response, body) {
-        if (error) {
-            console.log('Error sending messages: ', error)
-        } else if (response.body.error) {
-            console.log('Error: ', response.body.error)
-        }
-    })
-}
-
+restService.listen(process.env.PORT || 8000, function () {
+    console.log("Server up and listening");
+});
