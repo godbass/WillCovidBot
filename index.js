@@ -14,29 +14,23 @@ restService.use(
 restService.use(bodyParser.json());
 
 
-
-
 restService.set('port', (process.env.PORT || 5000))
-// Index route
-restService.get('/', function (req, res) {
-    res.send('Bienvenue sur WillCovidBot')
-})
+//// Index route
+//restService.get('/', function (req, res) {
+//    res.send('Bienvenue sur WillCovidBot')
+//})
 
-restService.get('/webhook/', function (req, res) {
-    if (req.query['hub.verify_token'] === verify_token) {
-        console.log("Chatbot WGB en cours d'utilisation")
-        res.send(req.query['hub.challenge'])
-    }
-    res.send('Error, wrong token')
-})
+//restService.get('/webhook/', function (req, res) {
+//    if (req.query['hub.verify_token'] === verify_token) {
+//        console.log("Chatbot WGB en cours d'utilisation")
+//        res.send(req.query['hub.challenge'])
+//    }
+//    res.send('Error, wrong token')
+//})
 
-restService.listen(restService.get('port'), function () {
-    console.log('running on port', restService.get('port'))
-})
-
-
-
-
+//restService.listen(restService.get('port'), function () {
+//    console.log('running on port', restService.get('port'))
+//})
 
 
 restService.post("/echo", function (req, res) {
