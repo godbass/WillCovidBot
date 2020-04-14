@@ -3,7 +3,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const request = require('request');
-const cheerio = require('cheerio');
 const fs = require('fs')
 
 const app = express();
@@ -23,6 +22,7 @@ var userInput = "Arabie saoudite";
 function scrapData() {
     request('https://news.google.com/covid19/map?hl=fr&gl=FR&ceid=FR:fr', (error, response, html) => {
         if (!error && response.statusCode == 200) {
+            const cheerio = require('cheerio');
             const $ = cheerio.load(html);
             const siteTable = $('#yDmH0d > c-wiz > div > div.FVeGwb.ARbOBb > div.BP0hze > div.y3767c > div > div > c-wiz.dzRe8d.pym81b > div > table > tbody > tr ');
             let dataTable = [];
@@ -92,7 +92,7 @@ console.log(listPaysfilter[0])
 
 
 // bot
-app.post("/echo", function (req, res) {
+app.post("/botcovid ", function (req, res) {
 
     var response =
         req.body.queryResult &&
@@ -101,9 +101,6 @@ app.post("/echo", function (req, res) {
             ? req.body.queryResult.parameters.pays
             : "Seems like some problem. Speak again.";
 
-
-
-
     var speechResponse = {
         google: {
             expectUserResponse: true,
@@ -111,7 +108,7 @@ app.post("/echo", function (req, res) {
                 items: [
                     {
                         simpleResponse: {
-                            textToSpeech: response
+                            textToSpeech: "La vie est simplement belle"
                         }
                     }
                 ]
