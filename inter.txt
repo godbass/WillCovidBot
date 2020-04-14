@@ -1,182 +1,136 @@
+"use strict";
 
-    //console.log('toCurr' + toCurr);
-    //console.log('fromCurr' + fromCurr);
+const express = require("express");
+const bodyParser = require("body-parser");
+const request = require('request');
+const cheerio = require('cheerio');
+const fs = require('fs')
+
+const app = express();
+app.use(
+    bodyParser.urlencoded({
+        extended: true
+    })
+);
+app.use(bodyParser.json());
 
 
-    /* var response = req.body.queryResult &&
-                req.body.queryResult.parameters &&
-                req.body.queryResult.parameters.echoText
-                ? req.body.queryResult.parameters.echoText
-                : "Seems like some problem. Speak again.";*/
+// Simulation
+var userInput = "Arabie saoudite";
 
 
+// scraping
+function scrapData() {
+    request('https://news.google.com/covid19/map?hl=fr&gl=FR&ceid=FR:fr', (error, response, html) => {
+        if (!error && response.statusCode == 200) {
+            const $ = cheerio.load(html);
+            const siteTable = $('#yDmH0d > c-wiz > div > div.FVeGwb.ARbOBb > div.BP0hze > div.y3767c > div > div > c-wiz.dzRe8d.pym81b > div > table > tbody > tr ');
+            let dataTable = [];
+
+            siteTable.each((index, element) => {
+                var recupTable = []
+                $(element.children).each((index1, element2) => {
+                    recupTable.push($(element2).text())
+                });
+                dataTable.push({
+                    'pays': recupTable[0],
+                    'confirmes': recupTable[1],
+                    'casparmillion': recupTable[2],
+                    'gueries': recupTable[3],
+                    'deces': recupTable[4]
+                })
+            });
+
+            let sendJson = JSON.stringify(dataTable);
+            fs.writeFileSync('data.json', sendJson);
+        }
+    });
+}
+scrapData()
 
 
+// traitement
+let jsonData = fs.readFileSync('data.json');
+var jsonFile = JSON.parse(jsonData);
 
-/* app.post("/audio", function (req, res) {
-    var response = "";
-    switch (req.body.result.parameters.AudioSample.toLowerCase()) {
-        //response Synthesis Markup Language 
-        case "music one":
-            response =
-                '<speak><audio src="https://actions.google.com/sounds/v1/cartoon/slide_whistle.ogg">did not get your audio file</audio></speak>';
-            break;
-        case "music two":
-            response =
-                '<speak><audio clipBegin="1s" clipEnd="3s" src="https://actions.google.com/sounds/v1/cartoon/slide_whistle.ogg">did not get your audio file</audio></speak>';
-            break;
-        case "music three":
-            response =
-                '<speak><audio repeatCount="2" soundLevel="-15db" src="https://actions.google.com/sounds/v1/cartoon/slide_whistle.ogg">did not get your audio file</audio></speak>';
-            break;
-        case "music four":
-            response =
-                '<speak><audio speed="200%" src="https://actions.google.com/sounds/v1/cartoon/slide_whistle.ogg">did not get your audio file</audio></speak>';
-            break;
-        case "music five":
-            response =
-                '<audio src="https://actions.google.com/sounds/v1/cartoon/slide_whistle.ogg">did not get your audio file</audio>';
-            break;
-        case "delay":
-            response =
-                '<speak>Let me take a break for 3 seconds. <break time="3s"/> I am back again.</speak>';
-            break;
-        //https://www.w3.org/TR/response-synthesis/#S3.2.3
-        case "cardinal":
-            response = '<speak><say-as interpret-as="cardinal">12345</say-as></speak>';
-            break;
-        case "ordinal":
-            response =
-                '<speak>I stood <say-as interpret-as="ordinal">10</say-as> in the class exams.</speak>';
-            break;
-        case "characters":
-            response =
-                '<speak>Hello is spelled as <say-as interpret-as="characters">Hello</say-as></speak>';
-            break;
-        case "fraction":
-            response =
-                '<speak>Rather than saying 24+3/4, I should say <say-as interpret-as="fraction">24+3/4</say-as></speak>';
-            break;
-        case "bleep":
-            response =
-                '<speak>I do not want to say <say-as interpret-as="bleep">F&%$#</say-as> word</speak>';
-            break;
-        case "unit":
-            response =
-                '<speak>This road is <say-as interpret-as="unit">50 foot</say-as> wide</speak>';
-            break;
-        case "verbatim":
-            response =
-                '<speak>You spell HELLO as <say-as interpret-as="verbatim">hello</say-as></speak>';
-            break;
-        case "date one":
-            response =
-                '<speak>Today is <say-as interpret-as="date" format="yyyymmdd" detail="1">2017-12-16</say-as></speak>';
-            break;
-        case "date two":
-            response =
-                '<speak>Today is <say-as interpret-as="date" format="dm" detail="1">16-12</say-as></speak>';
-            break;
-        case "date three":
-            response =
-                '<speak>Today is <say-as interpret-as="date" format="dmy" detail="1">16-12-2017</say-as></speak>';
-            break;
-        case "time":
-            response =
-                '<speak>It is <say-as interpret-as="time" format="hms12">2:30pm</say-as> now</speak>';
-            break;
-        case "telephone one":
-            response =
-                '<speak><say-as interpret-as="telephone" format="91">09012345678</say-as> </speak>';
-            break;
-        case "telephone two":
-            response =
-                '<speak><say-as interpret-as="telephone" format="1">(781) 771-7777</say-as> </speak>';
-            break;
-        // https://www.w3.org/TR/2005/NOTE-ssml-sayas-20050526/#S3.3
-        case "alternate":
-            response =
-                '<speak>IPL stands for <sub alias="indian premier league">IPL</sub></speak>';
-            break;
+// methode classique
+var repTab = [];
+for (var i = 0; i < jsonFile.length; i++) {
+    if (jsonFile[i]['pays'] == userInput) {
+        repTab.push(jsonFile[i]['pays'], jsonFile[i]['confirmes'], jsonFile[i]['casparmillion'], jsonFile[i]['gueries'], jsonFile[i]['deces'])
     }
+}
+if (repTab[0]) {
+    var repPays = repTab[0];
+    var repCas = repTab[1];
+    var repCasMillion = repTab[2];
+    var repGueris = repTab[3];
+    var repDeces = repTab[4];
+    console.log("Le pays " + repPays + " a maintenant " + repCas + " cas confirmés, " + repDeces + " décès et " + repGueris + " personnes guéries.");
+}
+else {
+    console.log("Oups !! Pays non pris en compte")
+}
+
+
+function traitement(pays, stat) {
+    /*pays = jsonFile.pays;
+    casConfirm = jsonFile.confirmes;
+    casParMillion = jsonFile.casparmillion;
+    gueris = jsonFile.gueries;
+    deces = jsonFile.deces;*/
+}
+traitement()
+
+
+/*map et filter
+ * 
+var tabPays = jsonFile.map(x => x['pays']);
+var listPaysfilter = tabPays.filter(x => x == userInput);
+console.log(listPaysfilter[0])
+*/
+
+
+// bot
+app.post("/echo", function (req, res) {
+
+    var response = "C'est un essai";
+    var pays = req.body.queryResult.parameters.pays;
+    var statsoms = req.body.queryResult.parameters.statsoms;
+
+    txt().then((response) => {
+        console.log(response)
+        let rawdata = fs.readFileSync('info.json');
+        info = JSON.parse(rawdata);
+        console.log(info)
+    }).catch((error) => {
+        console.log("Error")
+    })
+    var speechResponse = {
+        google: {
+            expectUserResponse: true,
+            richResponse: {
+                items: [
+                    {
+                        simpleResponse: {
+                            textToSpeech: response
+                        }
+                    }
+                ]
+            }
+        }
+    };
     return res.json({
+        payload: speechResponse,
+        //data: speechResponse,
+        fulfillmentText: response,
         response: response,
         displayText: response,
         source: "webhook-echo-sample"
     });
 });
 
-app.post("/video", function (req, res) {
-    return res.json({
-        response:
-            '<speak>  <audio src="https://www.youtube.com/watch?v=VX7SSnvpj-8">did not get your MP3 audio file</audio></speak>',
-        displayText:
-            '<speak>  <audio src="https://www.youtube.com/watch?v=VX7SSnvpj-8">did not get your MP3 audio file</audio></speak>',
-        source: "webhook-echo-sample"
-    });
+
+app.listen(process.env.PORT || 8000, function () {
+    console.log("Server up and listening");
 });
-
-app.post("/slack-test", function (req, res) {
-    var slack_message = {
-        text: "Details of JIRA board for Browse and Commerce",
-        attachments: [
-            {
-                title: "JIRA Board",
-                title_link: "http://www.google.com",
-                color: "#36a64f",
-
-                fields: [
-                    {
-                        title: "Epic Count",
-                        value: "50",
-                        short: "false"
-                    },
-                    {
-                        title: "Story Count",
-                        value: "40",
-                        short: "false"
-                    }
-                ],
-
-                thumb_url:
-                    "https://stiltsoft.com/blog/wp-content/uploads/2016/01/5.jira_.png"
-            },
-            {
-                title: "Story status count",
-                title_link: "http://www.google.com",
-                color: "#f49e42",
-
-                fields: [
-                    {
-                        title: "Not started",
-                        value: "50",
-                        short: "false"
-                    },
-                    {
-                        title: "Development",
-                        value: "40",
-                        short: "false"
-                    },
-                    {
-                        title: "Development",
-                        value: "40",
-                        short: "false"
-                    },
-                    {
-                        title: "Development",
-                        value: "40",
-                        short: "false"
-                    }
-                ]
-            }
-        ]
-    };
-    return res.json({
-        response: "response",
-        displayText: "response",
-        source: "webhook-echo-sample",
-        data: {
-            slack: slack_message
-        }
-    });
-}); */
