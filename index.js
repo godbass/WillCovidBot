@@ -108,7 +108,7 @@ app.post("/botcovid ", function (req, res) {
                 items: [
                     {
                         simpleResponse: {
-                            textToSpeech: "La vie est simplement belle"
+                            textToSpeech: response
                         }
                     }
                 ]
@@ -119,7 +119,7 @@ app.post("/botcovid ", function (req, res) {
     return res.json({
         payload: speechResponse,
         //data: speechResponse,
-        fulfillmentText: response,
+        fulfillmentText: "Avec Dieu on fera des exploits",
         response: response,
         displayText: response,
         source: "webhook-echo-sample"
