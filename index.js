@@ -119,7 +119,7 @@ app.post("/botcovid ", function (req, res) {
     return res.json({
         payload: speechResponse,
         //data: speechResponse,
-        fulfillmentText: "Avec Dieu on fera des exploits",
+        fulfillmentText: response,
         response: response,
         displayText: response,
         source: "webhook-echo-sample"
