@@ -101,10 +101,10 @@ app.post("/botcovid", function (req, res) {
     }
 
     var result;
-    if (demande == "deces") {
+/*    if (demande == "cas") {
         result = casstat();
     }
-    else if (demande == "cas") {
+    else if (demande == "deces") {
         result = decesstat();
     }
     else if (demande == "gueris") {
@@ -112,9 +112,9 @@ app.post("/botcovid", function (req, res) {
     }
     else {
         result = allstat();
-    }
+    }*/
 
-/*    switch (demande) {
+    switch (demande) {
         case "cas":
             result = casstat();
             break;
@@ -126,7 +126,7 @@ app.post("/botcovid", function (req, res) {
             break;
         default:
             result = "Problem";
-    }*/
+    }
 
     return res.json({
         payload: speechResponse,
