@@ -112,8 +112,9 @@ app.post("/botcovid", function (req, res) {
             result = gueristat();
             break;
         default:
-            result = allstat();
+            result = "Problem";
     }
+
     return res.json({
         payload: speechResponse,
         fulfillmentText: result,
