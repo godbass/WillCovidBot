@@ -63,7 +63,7 @@ app.post("/botcovid", function (req, res) {
     // traitement des données depuis le fichier JSON
     var repTab = [];
     for (var i = 0; i < jsonFile.length; i++) {
-        if (jsonFile[i]['pays'] == userInput) {
+        if (jsonFile[i]['pays'] == response) {
             repTab.push(jsonFile[i]['pays'], jsonFile[i]['confirmes'], jsonFile[i]['casparmillion'], jsonFile[i]['gueries'], jsonFile[i]['deces'])
         }
     }
