@@ -119,7 +119,7 @@ app.post("/botcovid", function (req, res) {
     return res.json({
         payload: speechResponse,
         //data: speechResponse,
-        fulfillmentText: "Ele l'est réellement",
+        fulfillmentText: "Le pays qu'on a choisi est" + userInput,
         response: "precieuse",
         displayText: "La vie",
         source: "webhook-statsCovid-sample"
