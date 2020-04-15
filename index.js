@@ -85,7 +85,7 @@ app.post("/botcovid", function (req, res) {
 
 
     function allstat() {
-        return demande + " : " + response + " a maintenant " + repTab[1] + " cas confirmes, " + repTab[4] + " deces et " + repTab[3] + " personnes gueries." + "\n" + " Soit " + repTab[2] + " car pour un million de personnes.";
+        return response + " : " + repTab[1] + " cas confirmes, " + repTab[4] + " deces et " + repTab[3] + " personnes gueries." + "\n" + " Soit " + repTab[2] + " car pour un million de personnes.";
     }
 
     function casstat() {
@@ -110,7 +110,7 @@ app.post("/botcovid", function (req, res) {
     else if (demande == "gueris") {
         result = gueristat();
     }
-    else {
+    else if (demande == "stats"){
         result = allstat();
     }
 
