@@ -53,6 +53,7 @@ var userInput = "Arabie saoudite";
 // bot
 app.post("/botcovid", function (req, res) {
 
+    var demande = req.body.queryResult.parameters.demandstat;
     var response =
         req.body.queryResult &&
         req.body.queryResult.parameters &&
@@ -96,10 +97,7 @@ app.post("/botcovid", function (req, res) {
 
     return res.json({
         payload: speechResponse,
-        //data: speechResponse,
-        fulfillmentText: response + " a maintenant " + repCas + " cas confirmes, " + repDeces + " deces et " + repGueris + " personnes gueries." + "\n" + " Soit " + repCasMillion + " car pour un million de personnes.",
-        response: "precieuse",
-        displayText: "La vie",
+        fulfillmentText: demande + " " + response + " a maintenant " + repCas + " cas confirmes, " + repDeces + " deces et " + repGueris + " personnes gueries." + "\n" + " Soit " + repCasMillion + " car pour un million de personnes.",
         source: "webhook-statsCovid-sample"
     });
 });
