@@ -92,7 +92,7 @@ console.log(listPaysfilter[0])
 
 
 // bot
-app.post("/echo", function (req, res) {
+app.post("/botcovid", function (req, res) {
 
     var response =
         req.body.queryResult &&
