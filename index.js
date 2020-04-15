@@ -100,8 +100,8 @@ app.post("/botcovid", function (req, res) {
         return response + " a desormais " + repTab[4] + " deces.";
     }
 
-    var result;
-/*    if (demande == "cas") {
+
+    if (demande == "cas") {
         result = casstat();
     }
     else if (demande == "deces") {
@@ -112,20 +112,6 @@ app.post("/botcovid", function (req, res) {
     }
     else {
         result = allstat();
-    }*/
-
-    switch (demande) {
-        case "cas":
-            result = casstat();
-            break;
-        case "deces":
-            result = decesstat();
-            break;
-        case "gueris":
-            result = gueristat();
-            break;
-        default:
-            result = "Problem";
     }
 
     return res.json({
