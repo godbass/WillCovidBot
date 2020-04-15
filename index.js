@@ -95,14 +95,31 @@ app.post("/botcovid", function (req, res) {
         }
     };
 
-    var result = res.json({
+
+    function allstat() {
+        return response + " a maintenant " + repCas + " cas confirmes, " + repDeces + " deces et " + repGueris + " personnes gueries." + "\n" + " Soit " + repCasMillion + " car pour un million de personnes.";
+    }
+
+    function casstat() {
+        return response + " est a " + repCas + " cas confirmes, " + "\n" + " Soit " + repCasMillion + " car pour un million de personnes.";
+    }
+
+    function gueristat() {
+        return response + " a maintenant " + repGueris + " personnes gueries.";
+    }
+
+    function decesstat() {
+        return response + " a desormais " + repDeces + " deces.";
+    }
+
+
+    var result = casstat();
+
+    return res.json({
         payload: speechResponse,
-        fulfillmentText: response + " a maintenant " + repCas + " cas confirmes, " + repDeces + " deces et " + repGueris + " personnes gueries." + "\n" + " Soit " + repCasMillion + " car pour un million de personnes.",
+        fulfillmentText: result,
         source: "webhook-statsCovid-sample"
     });
-
-    return result;
-
 });
 
 
