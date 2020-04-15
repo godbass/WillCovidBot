@@ -89,7 +89,7 @@ app.post("/botcovid", function (req, res) {
     }
 
     function casstat() {
-        return " car pour un million de personnes.";
+        return repTab[3] + " car pour un million de personnes.";
     }
 
     //function gueristat() {
