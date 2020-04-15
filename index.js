@@ -100,18 +100,18 @@ app.post("/botcovid", function (req, res) {
         return response + " a desormais " + repTab[4] + " deces.";
     }
 
-
+    var result;
     if (demande == "cas") {
-        var result = casstat();
+        result = casstat();
     }
     else if (demande == "décès") {
-        var result = decesstat();
+        result = decesstat();
     }
-    else if (demande == "guéries") {
-        var result = gueristat();
+    else if (demande == "guéris") {
+        result = gueristat();
     }
     else {
-        var result = allstat();
+        result = allstat();
     }
 
     return res.json({
