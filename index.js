@@ -119,8 +119,8 @@ app.post("/botcovid", function (req, res) {
     return res.json({
         payload: speechResponse,
         //data: speechResponse,
-        fulfillmentText: response,
-        response: "La vie est precieuse",
+        fulfillmentText: "Ele l'est réellement",
+        response: "precieuse",
         displayText: "La vie",
         source: "webhook-statsCovid-sample"
     });
