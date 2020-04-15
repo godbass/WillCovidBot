@@ -101,12 +101,12 @@ app.post("/botcovid", function (req, res) {
     }
 
     var result;
-    if (demande == "cas") {
-        result = casstat();
-    }
-    else if (demande == "décès") {
+    if (demande == "décès") {
         result = decesstat();
     }
+    //else if (demande == "décès") {
+    //    result = decesstat();
+    //}
     else if (demande == "guéris") {
         result = gueristat();
     }
