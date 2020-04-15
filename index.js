@@ -101,10 +101,18 @@ app.post("/botcovid", function (req, res) {
     }
 
 
-    var result = gueristat();
-
-
-
+    if (demande == "cas") {
+        var result = casstat();
+    }
+    if (demande == "décès") {
+        var result = decesstat();
+    }
+    if (demande == "guéries") {
+        var result = gueristat();
+    }
+    else {
+        var result = allstat();
+    }
 
     return res.json({
         payload: speechResponse,
