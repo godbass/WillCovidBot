@@ -97,7 +97,7 @@ app.post("/botcovid", function (req, res) {
     return res.json({
         payload: speechResponse,
         //data: speechResponse,
-        fulfillmentText: response + " est maintenant à " + repCas + " cas confirmés, " + repDeces + " deces et " + repGueris + " personnes guéries. \n Soit " + repCasMillion + " car pour un million de personnes.",
+        fulfillmentText: response + " a maintenant " + repCas + " cas confirmes, " + repDeces + " deces et " + repGueris + " personnes gueries." + "\n" + " Soit " + repCasMillion + " car pour un million de personnes.",
         response: "precieuse",
         displayText: "La vie",
         source: "webhook-statsCovid-sample"
