@@ -85,31 +85,31 @@ app.post("/botcovid", function (req, res) {
 
 
     function allstat() {
-        return demandstat + " : " + response + " a maintenant " + repTab[1] + " cas confirmes, " + repTab[4] + " deces et " + repTab[3] + " personnes gueries." + "\n" + " Soit " + repTab[2] + " car pour un million de personnes.";
+        return "onnes gueries.";
     }
 
     function casstat() {
-        return response + " est a " + repTab[1] + " cas confirmes, " + "\n" + " Soit " + repTab[2] + " car pour un million de personnes.";
+        return " car pour un million de personnes.";
     }
 
-    function gueristat() {
-        return response + " a maintenant " + repTab[3] + " personnes gueries.";
-    }
+    //function gueristat() {
+    //    return response + " a maintenant " + repTab[3] + " personnes gueries.";
+    //}
 
-    function decesstat() {
-        return response + " a desormais " + repTab[4] + " deces.";
-    }
+    //function decesstat() {
+    //    return response + " a desormais " + repTab[4] + " deces.";
+    //}
 
 
     if (demande == "cas") {
         var result = casstat();
     }
-    if (demande == "décès") {
-        var result = decesstat();
-    }
-    if (demande == "guéries") {
-        var result = gueristat();
-    }
+    //if (demande == "décès") {
+    //    var result = decesstat();
+    //}
+    //if (demande == "guéries") {
+    //    var result = gueristat();
+    //}
     else {
         var result = allstat();
     }
