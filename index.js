@@ -85,7 +85,7 @@ app.post("/botcovid", function (req, res) {
 
 
     function allstat() {
-        return demandstat + " : " + response + " a maintenant " + repTab[1] + " cas confirmes, " + repTab[4] + " deces et " + repTab[3] + " personnes gueries." + "\n" + " Soit " + repTab[2] + " car pour un million de personnes.";
+        return demande + " : " + response + " a maintenant " + repTab[1] + " cas confirmes, " + repTab[4] + " deces et " + repTab[3] + " personnes gueries." + "\n" + " Soit " + repTab[2] + " car pour un million de personnes.";
     }
 
     function casstat() {
@@ -101,19 +101,19 @@ app.post("/botcovid", function (req, res) {
     }
 
     var result;
-    if (demande == "décès") {
-        result = casstat();
+    switch (demande) {
+        case "cas":
+            result = casstat();
+            break;
+        case "deces":
+            result = decesstat();
+            break;
+        case "gueris":
+            result = gueristat();
+            break;
+        default:
+            result = allstat();
     }
-    else if (demande == "cas") {
-        result = decesstat();
-    }
-    else if (demande == "guéris") {
-        result = gueristat();
-    }
-    else {
-        result = allstat();
-    }
-
     return res.json({
         payload: speechResponse,
         fulfillmentText: result,
