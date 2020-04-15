@@ -95,11 +95,14 @@ app.post("/botcovid", function (req, res) {
         }
     };
 
-    return res.json({
+    var result = res.json({
         payload: speechResponse,
-        fulfillmentText: demande + " " + response + " a maintenant " + repCas + " cas confirmes, " + repDeces + " deces et " + repGueris + " personnes gueries." + "\n" + " Soit " + repCasMillion + " car pour un million de personnes.",
+        fulfillmentText: response + " a maintenant " + repCas + " cas confirmes, " + repDeces + " deces et " + repGueris + " personnes gueries." + "\n" + " Soit " + repCasMillion + " car pour un million de personnes.",
         source: "webhook-statsCovid-sample"
     });
+
+    return result;
+
 });
 
 
