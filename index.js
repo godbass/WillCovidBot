@@ -120,9 +120,9 @@ app.post("/botcovid", function (req, res) {
         payload: speechResponse,
         //data: speechResponse,
         fulfillmentText: response,
-        response: response,
-        displayText: "La vie est belle",
-        source: "webhook-echo-sample"
+        response: "La vie est precieuse",
+        displayText: "La vie",
+        source: "webhook-statsCovid-sample"
     });
 });
 
